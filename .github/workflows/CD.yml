@@ -1,0 +1,34 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH Key
+        run: |
+          echo "${{ secrets.AWS_EC2_KEY }}" > ec2_key.pem
+          chmod 600 ec2_key.pem
+
+      - name: Deploy to AWS EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@${{ secrets.AWS_EC2_IP }} << 'EOF'
+            if [ ! -d "/home/ubuntu/Blog_API" ]; then
+              git clone https://github.com/Zahid031/Blog_API.git /home/ubuntu/Blog_API
+            fi
+            cd /home/ubuntu/Blog_API
+            git pull origin main
+            sudo docker-compose down
+            sudo docker-compose up -d --build
+          EOF
+
+
+
