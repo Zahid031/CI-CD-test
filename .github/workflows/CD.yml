@@ -1,4 +1,4 @@
-name: CD
+name: Deploy PR Preview to EC2
 
 on:
   pull_request:
@@ -6,11 +6,11 @@ on:
       - dev
 
 jobs:
-  deploy:
+  preview-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout code (not needed for remote deploy)
         uses: actions/checkout@v3
 
       - name: Setup SSH Key
@@ -18,15 +18,31 @@ jobs:
           echo "${{ secrets.AWS_EC2_KEY }}" > ec2_key.pem
           chmod 600 ec2_key.pem
 
-      - name: Deploy to AWS EC2
+      - name: Deploy merged preview to EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@${{ secrets.AWS_EC2_IP }} << EOF
+            # Clone repo if it doesn't exist
             if [ ! -d "/home/ubuntu/CI-CD-test" ]; then
               git clone https://github.com/Zahid031/CI-CD-test.git /home/ubuntu/CI-CD-test
             fi
+
             cd /home/ubuntu/CI-CD-test
+
+            git reset --hard
+            git clean -fd
+
+            # Fetch latest changes
             git fetch origin
-            git reset --hard origin/dev
+
+            # Checkout dev and merge test-branch into it
+            git checkout dev
+            git pull origin dev
+            git merge origin/${{ github.head_ref }} --no-edit
+
+            # Optional: show final merged commit (debug)
+            git log -1 --oneline
+
+           
             sudo docker compose down
             sudo docker compose up -d --build
           EOF
