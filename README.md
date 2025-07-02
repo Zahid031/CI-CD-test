@@ -4,7 +4,7 @@
 
 A RESTful API for a blogging platform built with Django Rest Framework 
 
-# Live API 
+# Live API -
 ```bash
 http://ec2-67-202-2-33.compute-1.amazonaws.com:8001/
 ```
