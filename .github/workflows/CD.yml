@@ -20,9 +20,9 @@ jobs:
 
       - name: Deploy to AWS EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@${{ secrets.AWS_EC2_IP }} << 'EOF'
-            if [ ! -d "/home/ubuntu/Blog_API" ]; then
-              git clone https://github.com/Zahid031/Blog_API.git /home/ubuntu/Blog_API
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@${{ secrets.AWS_EC2_IP }} << EOF
+            if [ ! -d "/home/ubuntu/CI-CD-test" ]; then
+              git clone https://github.com/Zahid031/CI-CD-test.git /home/ubuntu/CI-CD-test
             fi
             cd /home/ubuntu/Blog_API
             git fetch origin
