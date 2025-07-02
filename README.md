@@ -125,6 +125,8 @@ curl -X GET http://localhost:8000/blog/posts/
 ### Get a specific post
 ```bash
 curl -X GET http://localhost:8000/blog/posts/1/
+
+
 ```
 
 ### Update a post(Author)
