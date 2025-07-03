@@ -14,3 +14,6 @@ done
 exec $cmd
 
 echo "Postgres is ready"
+
+
+echo "testing the CD"
