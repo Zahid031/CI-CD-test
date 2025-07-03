@@ -18,5 +18,3 @@ echo "Postgres is ready"
 
 echo "testing the CD"
 
-
-echo """
