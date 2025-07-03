@@ -14,6 +14,7 @@ echo "🧹 Cleaning up PR #$PR_ID..."
 # Stop and remove project
 if [ -f "$ENV_FILE" ]; then
     docker compose -p "$PROJECT_NAME" --file "$DEPLOY_DIR/docker-compose.yml" --env-file "$ENV_FILE" down -v --remove-orphans --rmi local
+
 fi
 
 # Cleanup files
