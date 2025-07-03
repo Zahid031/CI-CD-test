@@ -25,19 +25,19 @@ jobs:
 
           ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@${{ secrets.AWS_EC2_IP }} <<EOF
 
-            if [ ! -d "\$REMOTE_DIR" ]; then
-              git clone \$REPO_URL \$REMOTE_DIR
+            if [ ! -d "$REMOTE_DIR" ]; then
+              git clone $REPO_URL $REMOTE_DIR
             fi
 
-            cd \$REMOTE_DIR
+            cd $REMOTE_DIR
             git fetch origin
             git checkout dev
             git reset --hard origin/dev
             chmod +x *.sh
 
             if [ "${{ github.event.action }}" = "closed" ]; then
-              bash cleanup_pr.sh \$PR_ID
+              bash cleanup_pr.sh $PR_ID
             else
-              bash deploy_pr.sh \$PR_ID \$BRANCH_NAME \$REPO_URL
+              bash deploy_pr.sh $PR_ID $BRANCH_NAME $REPO_URL
             fi
           EOF
