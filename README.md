@@ -140,5 +140,5 @@ curl -X PUT http://localhost:8000/blog/posts/1/ \
 ### Delete a post (Author)
 ```bash
 curl -X DELETE http://localhost:8000/blog/posts/1/ \
-  -H "Authorization: Bearer <your_token>"
+  -H "Authorization: Bearer <your_token>"......
 ```
