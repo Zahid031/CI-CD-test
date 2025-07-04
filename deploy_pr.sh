@@ -54,4 +54,4 @@ EOF
 # Build and deploy
 docker compose -p "$PROJECT_NAME" --env-file "$ENV_FILE" up -d --build
 
-echo "✅ PR #$PR_ID deployed at: http://<your-ec2-ip>:$APP_PORT"
+
