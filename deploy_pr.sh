@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e
 
 PR_ID=$1
@@ -53,5 +52,3 @@ EOF
 
 # Build and deploy
 docker compose -p "$PROJECT_NAME" --env-file "$ENV_FILE" up -d --build
-
-
