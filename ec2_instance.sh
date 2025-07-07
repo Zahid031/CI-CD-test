@@ -26,3 +26,5 @@ aws ec2 run-instances \
   --output table
 
 echo "EC2 instance creation initiated..."
+
+echo ""hello test"
