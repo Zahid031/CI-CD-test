@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -84,9 +86,9 @@ WSGI_APPLICATION = 'blog_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'blog_db',
-        'USER': 'blog_user',
-        'PASSWORD': 'blog_user',
+        'NAME': os.environ.get('POSTGRES_DB', 'blog_db'),
+        'USER': os.environ.get('POSTGRES_USER', 'blog_user'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'blog_user'),
         'HOST': 'db',
         'PORT': '5432',
     }
