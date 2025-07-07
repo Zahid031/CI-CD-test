@@ -28,3 +28,4 @@ aws ec2 run-instances \
 echo "EC2 instance creation initiated..."
 
 echo ""hello test"
+echo "4 th test"
