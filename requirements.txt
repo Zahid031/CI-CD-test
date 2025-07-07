@@ -13,5 +13,4 @@ pytz==2025.2
 PyYAML==6.0.2
 sqlparse==0.5.3
 uritemplate==4.1.1
-dotenv==1.0.0
-
+python-dotenv 
