@@ -37,9 +37,8 @@ if [ ! -d ".git" ]; then
 fi
 
 git fetch origin
-git checkout dev
-git reset --hard origin/dev
-git merge origin/"$BRANCH_NAME" --no-edit
+git checkout "$BRANCH_NAME"
+git reset --hard "origin/$BRANCH_NAME"
 
 # Create .env file
 cat > "$ENV_FILE" <<EOF

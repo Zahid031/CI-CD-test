@@ -33,7 +33,7 @@ jobs:
             git fetch origin
             git checkout dev
             git reset --hard origin/dev
-            chmod +x *.sh
+            chmod +x *.sh 
 
             if [ "${{ github.event.action }}" = "closed" ]; then
               bash cleanup_pr.sh $PR_ID
