@@ -1,7 +1,7 @@
 name: Deploy PR Preview
 
 on:
-  pull_request:
+  pull_request_target:
     branches:
       - dev
     types: [opened, synchronize, reopened, closed]
@@ -20,7 +20,7 @@ jobs:
         run: |
           PR_ID=${{ github.event.pull_request.number }}
           BRANCH_NAME=${{ github.head_ref }}
-          REPO_URL="https://github.com/${{ github.repository }}.git"
+          REPO_URL="https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
           REMOTE_DIR="/home/ubuntu/CI-CD-test"
 
           ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@${{ secrets.AWS_EC2_IP }} <<EOF
