@@ -21,7 +21,6 @@ jobs:
           export BRANCH_NAME="${{ github.head_ref }}"
           export GITHUB_WORKSPACE="${GITHUB_WORKSPACE}"
 
-          # Create deployment directory if it doesn't exist
           mkdir -p $REMOTE_DIR
 
           # Sync code to deployment directory
