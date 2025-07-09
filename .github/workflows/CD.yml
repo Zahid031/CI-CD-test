@@ -1,19 +1,17 @@
 name: Deploy PR Preview
-
 on:
   pull_request_target:
     branches:
       - dev
     types: [opened, synchronize, reopened, closed]
-
 jobs:
   deploy:
     runs-on: self-hosted
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Deploy or Cleanup PR
         run: |
           export BASE_DIR="/home/ubuntu/CI-CD-test"
@@ -21,7 +19,6 @@ jobs:
           export PR_DIR="$BASE_DIR/pr_$PR_ID"
           export BRANCH_NAME="${{ github.head_ref }}"
           export GITHUB_WORKSPACE="${GITHUB_WORKSPACE}"
-
           if [ "${{ github.event.action }}" = "closed" ]; then
             if [ -d "$PR_DIR" ]; then
               cd $PR_DIR
