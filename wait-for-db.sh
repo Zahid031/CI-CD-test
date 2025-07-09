@@ -21,3 +21,5 @@ echo "testing the CD"
 echo "Hiiii"
 
 echo "3rd test"
+
+echo "runner"
