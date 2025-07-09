@@ -3,17 +3,20 @@
 set -e
 
 PR_ID=$1
-BASE_DIR="/home/ubuntu/pr_deployments"
-DEPLOY_DIR="$BASE_DIR/pr_$PR_ID"
-PORT_FILE="$BASE_DIR/used_ports.txt"
+PORT_FILE="/home/ubuntu/used_ports.txt"
 PROJECT_NAME="pr_${PR_ID}"
-ENV_FILE="$DEPLOY_DIR/.env"
+ENV_FILE=".env"
 
+# This script is executed in the deployment directory on the runner.
+# It cleans up the Docker resources for a closed PR.
 
 if [ -f "$ENV_FILE" ]; then
-    docker compose -p "$PROJECT_NAME" --file "$DEPLOY_DIR/docker-compose.yml" --env-file "$ENV_FILE" down -v --remove-orphans --rmi local
+    docker compose -p "$PROJECT_NAME" --file "docker-compose.yml" --env-file "$ENV_FILE" down -v --remove-orphans --rmi local
 fi
 
-rm -rf "$DEPLOY_DIR"
-sed -i "/^${PROJECT_NAME}:/d" "$PORT_FILE"
+# The deployment directory itself is cleaned up by the rsync in the CD workflow.
+# We just need to remove the port from the used_ports.txt file.
+if [ -f "$PORT_FILE" ]; then
+    sed -i "/^${PROJECT_NAME}:/d" "$PORT_FILE"
+fi
 

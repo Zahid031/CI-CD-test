@@ -8,36 +8,30 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
-      - name: Setup SSH key
-        run: |
-          echo "${{ secrets.AWS_EC2_KEY }}" > ec2_key.pem
-          chmod 600 ec2_key.pem
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Deploy or Cleanup PR
         run: |
-          PR_ID=${{ github.event.pull_request.number }}
-          BRANCH_NAME=${{ github.head_ref }}
-          REPO_URL="https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
-          REMOTE_DIR="/home/ubuntu/CI-CD-test"
+          export REMOTE_DIR="/home/ubuntu/CI-CD-test"
+          export PR_ID="${{ github.event.pull_request.number }}"
+          export BRANCH_NAME="${{ github.head_ref }}"
+          export GITHUB_WORKSPACE="${GITHUB_WORKSPACE}"
 
-          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ubuntu@${{ secrets.AWS_EC2_IP }} <<EOF
+          # Create deployment directory if it doesn't exist
+          mkdir -p $REMOTE_DIR
 
-            if [ ! -d "$REMOTE_DIR" ]; then
-              git clone $REPO_URL $REMOTE_DIR
-            fi
+          # Sync code to deployment directory
+          rsync -av --delete $GITHUB_WORKSPACE/ $REMOTE_DIR/
 
-            cd $REMOTE_DIR
-            git fetch origin
-            git checkout dev
-            git reset --hard origin/dev
-            chmod +x *.sh 
+          cd $REMOTE_DIR
+          chmod +x deploy_pr.sh cleanup_pr.sh
 
-            if [ "${{ github.event.action }}" = "closed" ]; then
-              bash cleanup_pr.sh $PR_ID
-            else
-              bash deploy_pr.sh $PR_ID $BRANCH_NAME $REPO_URL
-            fi
-          EOF
+          if [ "${{ github.event.action }}" = "closed" ]; then
+            ./cleanup_pr.sh $PR_ID
+          else
+            ./deploy_pr.sh $PR_ID $BRANCH_NAME
+          fi
