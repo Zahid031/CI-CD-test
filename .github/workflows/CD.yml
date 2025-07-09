@@ -16,21 +16,28 @@ jobs:
 
       - name: Deploy or Cleanup PR
         run: |
-          export REMOTE_DIR="/home/ubuntu/CI-CD-test"
+          export BASE_DIR="/home/ubuntu/CI-CD-test"
           export PR_ID="${{ github.event.pull_request.number }}"
+          export PR_DIR="$BASE_DIR/pr_$PR_ID"
           export BRANCH_NAME="${{ github.head_ref }}"
           export GITHUB_WORKSPACE="${GITHUB_WORKSPACE}"
 
-          mkdir -p $REMOTE_DIR
-
-          # Sync code to deployment directory
-          rsync -av --delete $GITHUB_WORKSPACE/ $REMOTE_DIR/
-
-          cd $REMOTE_DIR
-          chmod +x deploy_pr.sh cleanup_pr.sh
-
           if [ "${{ github.event.action }}" = "closed" ]; then
-            ./cleanup_pr.sh $PR_ID
+            if [ -d "$PR_DIR" ]; then
+              cd $PR_DIR
+              chmod +x cleanup_pr.sh
+              ./cleanup_pr.sh $PR_ID
+              cd $BASE_DIR
+              rm -rf $PR_DIR
+              echo "✅ PR preview for PR #$PR_ID has been cleaned up."
+            else
+              echo "No deployment found for PR #$PR_ID to clean up."
+            fi
           else
+            mkdir -p $PR_DIR
+            rsync -av --delete $GITHUB_WORKSPACE/ $PR_DIR/
+            cd $PR_DIR
+            chmod +x deploy_pr.sh
             ./deploy_pr.sh $PR_ID $BRANCH_NAME
+            echo "✅ PR preview for PR #$PR_ID has been deployed."
           fi
