@@ -6,15 +6,11 @@ BRANCH_NAME=$2
 PORT_RANGE_START=8000
 PORT_RANGE_END=8100
 
-# The PORT_FILE stores the ports used by PR previews.
 PORT_FILE="/home/ubuntu/used_ports.txt"
 ENV_FILE=".env"
 PROJECT_NAME="pr_${PR_ID}"
 
-# The script should be run from the directory containing the code.
-# The CD pipeline already syncs the code.
 
-# Pick random unused port
 if [ ! -f "$PORT_FILE" ]; then touch "$PORT_FILE"; fi
 
 # Check if this PR already has a port assigned.
@@ -33,7 +29,7 @@ else
 fi
 
 if [ -z "$APP_PORT" ]; then
-    echo "❌ No available ports in $PORT_RANGE_START–$PORT_RANGE_END"
+    echo " No available ports in $PORT_RANGE_START–$PORT_RANGE_END"
     exit 1
 fi
 

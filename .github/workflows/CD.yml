@@ -26,7 +26,7 @@ jobs:
               ./cleanup_pr.sh $PR_ID
               cd $BASE_DIR
               rm -rf $PR_DIR
-              echo "✅ PR preview for PR #$PR_ID has been cleaned up."
+              echo "PR preview for PR #$PR_ID has been cleaned up."
             else
               echo "No deployment found for PR #$PR_ID to clean up."
             fi
@@ -36,5 +36,5 @@ jobs:
             cd $PR_DIR
             chmod +x deploy_pr.sh
             ./deploy_pr.sh $PR_ID $BRANCH_NAME
-            echo "✅ PR preview for PR #$PR_ID has been deployed."
+            echo "PR preview for PR #$PR_ID has been deployed."
           fi
